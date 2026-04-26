@@ -24,15 +24,33 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userText }),
       })
-      const data = await res.json()
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", text: data.text || "(응답 없음)" },
-      ])
+
+      const raw = await res.text()
+      let data: any = {}
+      try {
+        data = raw ? JSON.parse(raw) : {}
+      } catch {
+        data = { error: `JSON 파싱 실패. status=${res.status}. body="${raw.slice(0, 200)}"` }
+      }
+
+      if (!res.ok || data.error) {
+        setMessages((m) => [
+          ...m,
+          {
+            role: "assistant",
+            text: `[서버 오류 ${res.status}] ${data.error || "(빈 응답)"}`,
+          },
+        ])
+      } else {
+        setMessages((m) => [
+          ...m,
+          { role: "assistant", text: data.text || "(응답 없음)" },
+        ])
+      }
     } catch (err) {
       setMessages((m) => [
         ...m,
-        { role: "assistant", text: "오류가 발생했습니다: " + String(err) },
+        { role: "assistant", text: "[네트워크 오류] " + String(err) },
       ])
     } finally {
       setLoading(false)
