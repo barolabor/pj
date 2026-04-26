@@ -47,6 +47,9 @@ export default async function RootLayout({
               <Link href="/chat" className="hover:text-white">
                 상담하기
               </Link>
+              <Link href="/pricing" className="hover:text-white">
+                요금제
+              </Link>
               {session?.user ? (
                 <form
                   action={async () => {
