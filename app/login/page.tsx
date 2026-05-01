@@ -1,5 +1,6 @@
 import { signIn } from "@/auth"
 import Link from "next/link"
+import InAppBrowserNotice from "./InAppBrowserNotice"
 
 export default function LoginPage() {
   return (
@@ -11,6 +12,7 @@ export default function LoginPage() {
             상담 내역을 저장하고 이어서 보려면 로그인이 필요합니다.
           </p>
         </div>
+        <InAppBrowserNotice />
         <div className="space-y-3">
           <form
             action={async () => {
